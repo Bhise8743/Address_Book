@@ -47,6 +47,31 @@ class AddressBook():
         self.addres_book_name = name
         self.contact_dict = {}
 
+    def add_contact(self,con_obj):
+        """
+           Description:
+               this function used to add new contact in the contact book
+
+           Parameter: self , contact object
+
+           Return: None
+
+        """
+        self.contact_dict.update({con_obj.name:con_obj})
+
+    def display_all_contacts(self):
+        """
+           Description:
+               this function used to display all contact details
+
+           Parameter: self
+
+           Return: None
+
+        """
+        for key,value in self.contact_dict.items():
+            value.display_contact()
+
 
 def main():
     """
