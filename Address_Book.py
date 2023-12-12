@@ -135,7 +135,15 @@ class AddressBook():
                 con_obj.update_contact()
         except Exception as ex:
             print(ex)
-            
+
+    def delete_contact(self,name):
+        try:
+            self.contact_dict.pop(name)
+        except Exception as ex:
+            print(ex)
+        else:
+            print("Contact deleted successfully ")
+
 
 def main():
     """
@@ -157,7 +165,8 @@ def main():
                         1. Add contact in the Address book
                         2. Update Contact 
                         3. Display all contacts 
-                        4. exist
+                        4. Delete contact of Person
+                        5. Exist
             """))
 
             match user_choice:
@@ -179,7 +188,11 @@ def main():
                 case 3:
                     address_book.display_all_contacts()
                 case 4:
+                    name = input("Enter the name ")
+                    address_book.delete_contact(name)
+                case 5:
                     break
+
         except Exception as ex:
             print(ex)
 
