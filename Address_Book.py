@@ -40,7 +40,7 @@ class Contact:
     def display_contact(self):
         """
            Description:
-               this function used to display contact details
+               this function is used to display contact details
 
            Parameter: self
 
@@ -55,7 +55,7 @@ class Contact:
     def update_contact(self):
         """
            Description:
-               this function used to update the contact details
+               this function is used to update the contact details
 
            Parameter: self
 
@@ -107,7 +107,7 @@ class AddressBook():
     def add_contact(self, con_obj):
         """
            Description:
-               this function used to add new contact in the contact book
+               this function is used to add new contact in the contact book
 
            Parameter: self , con_obj: contact object
 
@@ -116,10 +116,23 @@ class AddressBook():
         """
         self.contact_dict.update({con_obj.name: con_obj})
 
+
+    def display_one_contact(self,name):
+        """
+           Description:
+               this function is used to display one person contact details
+
+           Parameter: self
+
+           Return: None
+
+        """
+        con_obj = self.contact_dict.get(name)
+        con_obj.display_contact()
     def display_all_contacts(self):
         """
            Description:
-               this function used to display all contact details
+               this function is used to display all contact details
 
            Parameter: self
 
@@ -135,7 +148,7 @@ class AddressBook():
     def update_contact_in_book(self, name):
         """
            Description:
-               this function used update the contact details of one person
+               this function is used update the contact details of one person
 
            Parameter: self , name of person
 
@@ -152,9 +165,9 @@ class AddressBook():
     def delete_contact(self, name):
         """
            Description:
-               this function used to delete contact form the address book
+               this function is used to delete contact form the address book
 
-           Parameter: self
+           Parameter: self , name : name of contact person
 
            Return: None
 
@@ -174,7 +187,7 @@ class MultipleAddressBook:
     def add_new_book(self, add_obj: AddressBook):
         """
            Description:
-               this function used to add an address book in the multiple books
+               this function is used to add an address book in the multiple books
 
            Parameter: self , object of address book class
 
@@ -186,11 +199,11 @@ class MultipleAddressBook:
     def get_book(self, name):
         """
            Description:
-               this function used to return the address book
+               this function is used to return the address book
 
-           Parameter: self
+           Parameter: self, name : name of the contact person
 
-           Return: None
+           Return: contact object
 
         """
         return self.add_book_dict.get(name)  # address book name as a key
@@ -199,7 +212,7 @@ class MultipleAddressBook:
 def main():
     """
        Description:
-           this function used to create object of class and call the member function of the class
+           this function is used to create object of class and call the member function of the class
 
        Parameter: self
 
@@ -227,14 +240,19 @@ def main():
                         add_book_obj = AddressBook(a_book_name)
 
                     name = input("Enter the first and last name ")
-                    address = input("Enter the address ")
-                    city = input("Enter the city ")
-                    state = input("Enter the state ")
-                    zip_code = input("Enter the zip code ")
-                    p_num = input("Enter the Phone number ")
-                    email = input("Enter the email ")
-                    con_obj = Contact(name, address, city, state, zip_code, p_num, email)
+                    if add_book_obj.contact_dict.get(name) is None:
+                        address = input("Enter the address ")
+                        city = input("Enter the city ")
+                        state = input("Enter the state ")
+                        zip_code = input("Enter the zip code ")
+                        p_num = input("Enter the Phone number ")
+                        email = input("Enter the email ")
+                    else:
+                        print("Contact already present ")
+                        add_book_obj.display_one_contact(name)
+                        continue
 
+                    con_obj = Contact(name, address, city, state, zip_code, p_num, email)
                     add_book_obj.add_contact(con_obj)
                     mul_a_b_obj.add_new_book(add_book_obj)
 
