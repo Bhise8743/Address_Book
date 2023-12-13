@@ -12,6 +12,19 @@
 
 """
 
+"""
+debug
+info
+warning
+exception
+error
+"""
+
+import logging
+
+logging.basicConfig(filename="Address_book_log.log", level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+logger = logging.getLogger(__name__)  # current file name
+
 
 class Contact:
 
@@ -49,18 +62,19 @@ class Contact:
            Return: None
 
         """
-        while True:
-            try:
+        try:
+            while True:
+
                 user_choice = int(input("""
-                                            1. change name
-                                            2. change address 
-                                            3. change city
-                                            4. change state
-                                            5. change zip code
-                                            6. change phone number
-                                            7. change email
-                                            8. exist
-                                    """))
+                                                1. change name
+                                                2. change address 
+                                                3. change city
+                                                4. change state
+                                                5. change zip code
+                                                6. change phone number
+                                                7. change email
+                                                8. exist
+                                        """))
                 if user_choice != 8:
                     change_con = input("Enter the changeable thing ")  # changeable content
                 match user_choice:
@@ -80,9 +94,8 @@ class Contact:
                         self.email = change_con
                     case 8:
                         break
-
-            except Exception as ex:
-                print(ex)
+        except Exception as ex:
+            logger.exception(ex)
 
 
 class AddressBook():
@@ -96,7 +109,7 @@ class AddressBook():
            Description:
                this function used to add new contact in the contact book
 
-           Parameter: self , contact object
+           Parameter: self , con_obj: contact object
 
            Return: None
 
@@ -136,13 +149,51 @@ class AddressBook():
         except Exception as ex:
             print(ex)
 
-    def delete_contact(self,name):
+    def delete_contact(self, name):
+        """
+           Description:
+               this function used to delete contact form the address book
+
+           Parameter: self
+
+           Return: None
+
+        """
         try:
             self.contact_dict.pop(name)
         except Exception as ex:
             print(ex)
         else:
             print("Contact deleted successfully ")
+
+
+class MultipleAddressBook:
+    def __init__(self):
+        self.add_book_dict = {}
+
+    def add_new_book(self, add_obj: AddressBook):
+        """
+           Description:
+               this function used to add an address book in the multiple books
+
+           Parameter: self , object of address book class
+
+           Return: None
+
+        """
+        self.add_book_dict.update({add_obj.address_book_name: add_obj})
+
+    def get_book(self, name):
+        """
+           Description:
+               this function used to return the address book
+
+           Parameter: self
+
+           Return: None
+
+        """
+        return self.add_book_dict.get(name)  # address book name as a key
 
 
 def main():
@@ -157,20 +208,23 @@ def main():
     """
 
     print("Welcome To Address Book program in AddressBookMain class on Master Branch ")
-    address_book = AddressBook("Maha Address")
-    while True:
-        try:
-
+    mul_a_b_obj = MultipleAddressBook()
+    try:
+        while True:
             user_choice = int(input("""
                         1. Add contact in the Address book
                         2. Update Contact 
                         3. Display all contacts 
                         4. Delete contact of Person
-                        5. Exist
+                        5. Exit
             """))
 
             match user_choice:
                 case 1:
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        add_book_obj = AddressBook(a_book_name)
 
                     name = input("Enter the first and last name ")
                     address = input("Enter the address ")
@@ -180,21 +234,29 @@ def main():
                     p_num = input("Enter the Phone number ")
                     email = input("Enter the email ")
                     con_obj = Contact(name, address, city, state, zip_code, p_num, email)
-                    address_book.add_contact(con_obj)
+
+                    add_book_obj.add_contact(con_obj)
+                    mul_a_b_obj.add_new_book(add_book_obj)
 
                 case 2:
-                    name = input("Enter the name ")
-                    address_book.update_contact_in_book(name)
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    name = input("Enter the name of person ")
+                    add_book_obj.update_contact_in_book(name)
                 case 3:
-                    address_book.display_all_contacts()
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    add_book_obj.display_all_contacts()
                 case 4:
-                    name = input("Enter the name ")
-                    address_book.delete_contact(name)
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    name = input("Enter the name person name you want to remove from the address book ")
+                    add_book_obj.delete_contact(name)
                 case 5:
                     break
+    except Exception as e:
+        logger.exception(e)
 
-        except Exception as ex:
-            print(ex)
 
 if __name__ == '__main__':
     main()
