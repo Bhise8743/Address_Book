@@ -22,7 +22,8 @@ error
 
 import logging
 
-logging.basicConfig(filename="Address_book_log.log", level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+logging.basicConfig(filename="Address_book_log.log", level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s')
 logger = logging.getLogger(__name__)  # current file name
 
 
@@ -48,7 +49,7 @@ class Contact:
 
         """
         print(f"Name : {self.name} , Address : {self.address},")
-        print(f"{self.city} {self.state} - {self.zip_code},")
+        print(f"City : {self.city}, State : {self.state} - {self.zip_code},")
         print(f"Phone No. : {self.p_num}  Email : {self.email}")
         print("----------------------------------------------------------------------------")
 
@@ -116,8 +117,7 @@ class AddressBook():
         """
         self.contact_dict.update({con_obj.name: con_obj})
 
-
-    def display_one_contact(self,name):
+    def display_one_contact(self, name):
         """
            Description:
                this function is used to display one person contact details
@@ -129,6 +129,7 @@ class AddressBook():
         """
         con_obj = self.contact_dict.get(name)
         con_obj.display_contact()
+
     def display_all_contacts(self):
         """
            Description:
@@ -161,6 +162,20 @@ class AddressBook():
                 con_obj.update_contact()
         except Exception as ex:
             print(ex)
+
+    def search_contact(self, city):
+        """
+           Description:
+               this function is used search the contact using city or state name
+
+           Parameter: self , city :city in the contact
+
+           Return: None
+
+        """
+        for key, value in self.contact_dict.items():
+            if value.city == city or value.state == city:
+                value.display_contact()
 
     def delete_contact(self, name):
         """
@@ -208,6 +223,32 @@ class MultipleAddressBook:
         """
         return self.add_book_dict.get(name)  # address book name as a key
 
+    def search_con_using_city(self, city):
+        """
+           Description:
+               this function is used to search contact using city name
+
+           Parameter: self, city : city of the contact person
+
+           Return: contact object
+
+        """
+        for key, value in self.add_book_dict.items():
+            value.search_contact(city)
+
+    def search_con_using_state(self, state):
+        """
+           Description:
+               this function is used to search contact using state name
+
+           Parameter: self, state : state of the contact person
+
+           Return: contact object
+
+        """
+        for key, value in self.add_book_dict.items():
+            value.search_contact(state)
+
 
 def main():
     """
@@ -229,7 +270,9 @@ def main():
                         2. Update Contact 
                         3. Display all contacts 
                         4. Delete contact of Person
-                        5. Exit
+                        5. Search Contact using state 
+                        6. Search Contact using city
+                        7. exist
             """))
 
             match user_choice:
@@ -259,19 +302,46 @@ def main():
                 case 2:
                     a_book_name = input("Enter the address book name : ")
                     add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+
                     name = input("Enter the name of person ")
                     add_book_obj.update_contact_in_book(name)
                 case 3:
                     a_book_name = input("Enter the address book name : ")
                     add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+
                     add_book_obj.display_all_contacts()
                 case 4:
                     a_book_name = input("Enter the address book name : ")
                     add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+
                     name = input("Enter the name person name you want to remove from the address book ")
                     add_book_obj.delete_contact(name)
                 case 5:
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+
+                    inp = input("Enter state name ")
+                    add_book_obj.search_contact(inp)
+                case 6:
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+
+                    inp = input("Enter city name ")
+                    add_book_obj.search_contact(inp)
+
+                case 7:
                     break
+
     except Exception as e:
         logger.exception(e)
 
