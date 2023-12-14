@@ -174,11 +174,21 @@ class AddressBook():
            Return: None
 
         """
-        for key, value in self.contact_dict.items():
-            if value.city.lower() == city.lower() or value.state.lower() == city.lower():
-                value.display_contact()
+        counter= 0
+        # for key, value in self.contact_dict.items():
+        #     if value.city.lower() == city.lower() or value.state.lower() == city.lower():
+        #         value.display_contact()
+        #         counter += 1
+        # return counter
 
-    def make_a_dict_person_city_state(self):
+        contacts = dict(filter(lambda x: x[1].city.lower()==city.lower() or x[1].state.lower() == city.lower()  ,self.contact_dict.items() ))
+        # print(contacts)
+        for i in contacts.values():
+            counter += 1
+            i.display_contact()
+        return counter   
+
+    def make_a_dict_person_city_state(self,):
         """
            Description:
                this function is used to make a dictionary of person city , state
@@ -188,11 +198,13 @@ class AddressBook():
            Return: None
 
         """
-        for key, value in self.contact_dict.items():
-            self.person_city_dict.update({value.name: value.city})
-            self.person_state_dict.update({value.name: value.state})
-        print(f"Person :City {self.person_city_dict}")
-        print(f"Person : state {self.person_state_dict}")
+
+        # for key, value in self.contact_dict.items():
+        #     self.person_city_dict.update({value.name: value.city})
+        #     self.person_state_dict.update({value.name: value.state})
+        # print(f"Person :City {self.person_city_dict}")
+        # print(f"Person : state {self.person_state_dict}")
+        # contacts = filter(lambda x : x[1].city)
 
     def delete_contact(self, name):
         """
@@ -346,16 +358,18 @@ def main():
                     if add_book_obj is None:
                         print("This book is not present ")
 
-                    inp = input("Enter state name ")
-                    add_book_obj.search_contact(inp)
+                    state = input("Enter state name ")
+                    temp = add_book_obj.search_contact(state)
+                    print(f"In the {state} there are {temp} Contact present")
                 case 6:
                     a_book_name = input("Enter the address book name : ")
                     add_book_obj = mul_a_b_obj.get_book(a_book_name)
                     if add_book_obj is None:
                         print("This book is not present ")
 
-                    inp = input("Enter city name ")
-                    add_book_obj.search_contact(inp)
+                    city = input("Enter city name ")
+                    temp = add_book_obj.search_contact(city)
+                    print(f"In the {city} there are {temp} contact present ")
                 case 7:
                     a_book_name = input("Enter the address book name : ")
                     add_book_obj = mul_a_b_obj.get_book(a_book_name)
