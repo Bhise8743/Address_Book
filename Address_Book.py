@@ -6,7 +6,7 @@
 
 @Last Modified by: Omkar Bhise
 
-@Last Modified time: 2023-12-12 12:30:00
+@Last Modified time: 2023-12-14 02:30:00
 
 @Title :  Address Book Program
 
@@ -19,7 +19,7 @@ warning
 exception
 error
 """
-
+# stream handler
 import logging
 
 logging.basicConfig(filename="Address_book_log.log", level=logging.DEBUG,
@@ -104,6 +104,8 @@ class AddressBook():
     def __init__(self, name):
         self.address_book_name = name
         self.contact_dict = {}
+        self.person_city_dict = {}
+        self.person_state_dict = {}
 
     def add_contact(self, con_obj):
         """
@@ -145,7 +147,6 @@ class AddressBook():
                 value.display_contact()
         except Exception as ex:
             print(ex)
-
     def update_contact_in_book(self, name):
         """
            Description:
@@ -174,8 +175,24 @@ class AddressBook():
 
         """
         for key, value in self.contact_dict.items():
-            if value.city == city or value.state == city:
+            if value.city.lower() == city.lower() or value.state.lower() == city.lower():
                 value.display_contact()
+
+    def make_a_dict_person_city_state(self):
+        """
+           Description:
+               this function is used to make a dictionary of person city , state
+
+           Parameter: self
+
+           Return: None
+
+        """
+        for key, value in self.contact_dict.items():
+            self.person_city_dict.update({value.name: value.city})
+            self.person_state_dict.update({value.name: value.state})
+        print(f"Person :City {self.person_city_dict}")
+        print(f"Person : state {self.person_state_dict}")
 
     def delete_contact(self, name):
         """
@@ -272,7 +289,8 @@ def main():
                         4. Delete contact of Person
                         5. Search Contact using state 
                         6. Search Contact using city
-                        7. exist
+                        7. Maintain dictionary of Person City State
+                        8. exit
             """))
 
             match user_choice:
@@ -338,8 +356,13 @@ def main():
 
                     inp = input("Enter city name ")
                     add_book_obj.search_contact(inp)
-
                 case 7:
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+                    add_book_obj.make_a_dict_person_city_state()
+                case 8:
                     break
 
     except Exception as e:
