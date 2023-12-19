@@ -362,7 +362,7 @@ class MultipleAddressBook:
 
         """
         with open("add_book_csv.csv", 'w', newline="") as f:
-            filed_name = ["name", "address", "city", "state", "zip_code", "p_num", "e-mail", "book_name"]
+            filed_name = ["name", "address", "city", "state", "zip_code", "p_num", "email", "book_name"]
             writer = csv.DictWriter(f, fieldnames=filed_name)
             writer.writeheader()
             for book, add_book_obj in self.add_book_dict.items():
@@ -397,7 +397,7 @@ def main():
                         5. Search Contact using state 
                         6. Search Contact using city
                         7. Maintain dictionary of Person City State
-                        8. Sort data in address book using person name 
+.                        8. Sort data in address book using person name 
                         9. sort address book contact using city name 
                         10. Add contact to the text files 
                         11. Add contact to the csv files 
