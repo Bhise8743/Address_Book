@@ -11,6 +11,7 @@
 @Title :  Address Book Program
 
 """
+import csv
 
 """
 debug
@@ -112,6 +113,20 @@ class Contact:
         return {
             f'Name : {self.name} , Address : {self.address} , City : {self.city} , State : {self.state} , Zip-Code : {self.zip_code}, '
             f'Phone Number {self.p_num} , E-mail : {self.email}'}
+
+    def add_contact_to_csv(self):
+        """
+           Description:
+               this function is used to return the contact
+
+           Parameter: self
+
+           Return: it returns the contact Object
+
+        """
+        return {
+            "name": self.name, "address": self.address, "city": self.city, "state": self.state,
+            "zip_code": self.zip_code, "p_num": self.p_num, "email": self.email}
 
 
 class AddressBook():
@@ -317,14 +332,14 @@ class MultipleAddressBook:
     def add_contact_to_txt_file(self):
         """
            Description:
-               this function is used to write the details of the contacts in the text files
+               this function is used to write the details of the contacts in the text file
 
            Parameter: self
 
            Return: None
 
         """
-        with open("add_book_contact.txt", 'a') as f:
+        with open("add_book_contact.txt", 'w') as f:
             for book, add_book_obj in self.add_book_dict.items():
                 add_book_obj: AddressBook
                 for contact, con_obj in add_book_obj.contact_dict.items():
@@ -335,6 +350,28 @@ class MultipleAddressBook:
         with open("add_book_contact.txt", 'r') as f:
             i = f.read()
         print(i)
+
+    def add_book_csv_file(self):
+        """
+           Description:
+               this function is used to write the details of the contacts in the csv file
+
+           Parameter: self
+
+           Return: None
+
+        """
+        with open("add_book_csv.csv", 'w', newline="") as f:
+            filed_name = ["name", "address", "city", "state", "zip_code", "p_num", "e-mail", "book_name"]
+            writer = csv.DictWriter(f, fieldnames=filed_name)
+            writer.writeheader()
+            for book, add_book_obj in self.add_book_dict.items():
+                add_book_obj: AddressBook
+                for contact, con_obj in add_book_obj.contact_dict.items():
+                    data = con_obj.add_contact_to_csv()
+                    data.update({'book_name': contact})
+                    print(data)
+                    writer.writerow(data)
 
 
 def main():
@@ -363,7 +400,8 @@ def main():
                         8. Sort data in address book using person name 
                         9. sort address book contact using city name 
                         10. Add contact to the text files 
-                        11.exit
+                        11. Add contact to the csv files 
+                        12. exit
             """))
 
             match user_choice:
@@ -453,6 +491,8 @@ def main():
                 case 10:
                     mul_a_b_obj.add_contact_to_txt_file()
                 case 11:
+                    mul_a_b_obj.add_book_csv_file()
+                case 12:
                     break
 
     except Exception as e:
