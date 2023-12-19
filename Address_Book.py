@@ -99,6 +99,20 @@ class Contact:
         except Exception as ex:
             logger.exception(ex)
 
+    def add_contact_to_txt(self):
+        """
+           Description:
+               this function is used to return the contact
+
+           Parameter: self
+
+           Return: it returns the contact Object
+
+        """
+        return {
+            f'Name : {self.name} , Address : {self.address} , City : {self.city} , State : {self.state} , Zip-Code : {self.zip_code}, '
+            f'Phone Number {self.p_num} , E-mail : {self.email}'}
+
 
 class AddressBook():
 
@@ -213,7 +227,7 @@ class AddressBook():
         # print(f"Person : state {self.person_state_dict}")
         # contacts = filter(lambda x : x[1].city)
 
-    def sort_add_book_con_using_city(self,city_name):
+    def sort_add_book_con_using_city(self, city_name):
         """
            Description:
                this function is used to sort contact using city or state
@@ -223,9 +237,9 @@ class AddressBook():
            Return: None
 
         """
-        sorted_con = sorted(self.contact_dict.values(),key=lambda x: x.city == city_name, reverse=False)
+        sorted_con = sorted(self.contact_dict.values(), key=lambda x: x.city == city_name, reverse=False)
         for i in sorted_con:
-            i:Contact
+            i: Contact
             print(f"{i.name} --> {i.city}")
 
     def delete_contact(self, name):
@@ -300,6 +314,28 @@ class MultipleAddressBook:
         for key, value in self.add_book_dict.items():
             value.search_contact(state)
 
+    def add_contact_to_txt_file(self):
+        """
+           Description:
+               this function is used to write the details of the contacts in the text files
+
+           Parameter: self
+
+           Return: None
+
+        """
+        with open("add_book_contact.txt", 'a') as f:
+            for book, add_book_obj in self.add_book_dict.items():
+                add_book_obj: AddressBook
+                for contact, con_obj in add_book_obj.contact_dict.items():
+                    con_obj: Contact
+                    f.write(str(f'{con_obj.add_contact_to_txt()} \n'))
+
+        # read the text file data
+        with open("add_book_contact.txt", 'r') as f:
+            i = f.read()
+        print(i)
+
 
 def main():
     """
@@ -326,7 +362,8 @@ def main():
                         7. Maintain dictionary of Person City State
                         8. Sort data in address book using person name 
                         9. sort address book contact using city name 
-                        10.exit
+                        10. Add contact to the text files 
+                        11.exit
             """))
 
             match user_choice:
@@ -414,6 +451,8 @@ def main():
                     city_name = input("Enter the city name ")
                     add_book_obj.sort_add_book_con_using_city(city_name)
                 case 10:
+                    mul_a_b_obj.add_contact_to_txt_file()
+                case 11:
                     break
 
     except Exception as e:
