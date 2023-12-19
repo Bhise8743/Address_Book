@@ -12,6 +12,7 @@
 
 """
 import csv
+import json
 
 """
 debug
@@ -114,7 +115,7 @@ class Contact:
             f'Name : {self.name} , Address : {self.address} , City : {self.city} , State : {self.state} , Zip-Code : {self.zip_code}, '
             f'Phone Number {self.p_num} , E-mail : {self.email}'}
 
-    def add_contact_to_csv(self):
+    def add_contact_to_files(self):
         """
            Description:
                this function is used to return the contact
@@ -134,6 +135,7 @@ class AddressBook():
     def __init__(self, name):
         self.address_book_name = name
         self.contact_dict = {}
+        self.json_contact_dict = {}
 
     def add_contact(self, con_obj):
         """
@@ -257,6 +259,11 @@ class AddressBook():
             i: Contact
             print(f"{i.name} --> {i.city}")
 
+    def add_json_contact(self):
+
+        for key, value in self.contact_dict.items():
+            self.json_contact_dict.update({key: value.add_contact_to_files()})
+
     def delete_contact(self, name):
         """
            Description:
@@ -368,10 +375,27 @@ class MultipleAddressBook:
             for book, add_book_obj in self.add_book_dict.items():
                 add_book_obj: AddressBook
                 for contact, con_obj in add_book_obj.contact_dict.items():
-                    data = con_obj.add_contact_to_csv()
+                    data = con_obj.add_contact_to_files()
                     data.update({'book_name': contact})
                     print(data)
                     writer.writerow(data)
+
+    def add_contact_to_json_file(self):
+        """
+           Description:
+               this function is used to write contact to the json file
+
+           Parameter: self
+
+           Return: None
+
+        """
+        json_dict = {}
+        for name, obj in self.add_book_dict.items():
+            json_dict.update({name: obj.json_contact_dict})
+        with open("add_contact_json.json", 'w') as f:
+            json.dump(json_dict, f, indent=4)
+            f.close()
 
 
 def main():
@@ -401,7 +425,8 @@ def main():
                         9. sort address book contact using city name 
                         10. Add contact to the text files 
                         11. Add contact to the csv files 
-                        12. exit
+                        12. Add contact in JSON files
+                        13. exit
             """))
 
             match user_choice:
@@ -427,7 +452,7 @@ def main():
                     con_obj = Contact(name, address, city, state, zip_code, p_num, email)
                     add_book_obj.add_contact(con_obj)
                     mul_a_b_obj.add_new_book(add_book_obj)
-
+                    add_book_obj.add_json_contact()
                 case 2:
                     a_book_name = input("Enter the address book name : ")
                     add_book_obj = mul_a_b_obj.get_book(a_book_name)
@@ -493,6 +518,8 @@ def main():
                 case 11:
                     mul_a_b_obj.add_book_csv_file()
                 case 12:
+                    mul_a_b_obj.add_contact_to_json_file()
+                case 13:
                     break
 
     except Exception as e:
