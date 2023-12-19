@@ -18,11 +18,13 @@ info
 warning
 exception
 error
+critical
 """
 # stream handler
 import logging
 
-logging.basicConfig(filename="Address_book_log.log", level=logging.DEBUG,
+logging.basicConfig(filename="Address_book_log.log", level=logging.DEBUG,  # by default filemode is the append()  if
+                    # you want the wirte the update every time then the filemode is the write
                     format='%(asctime)s %(levelname)s %(message)s')
 logger = logging.getLogger(__name__)  # current file name
 
@@ -67,20 +69,20 @@ class Contact:
             while True:
 
                 user_choice = int(input("""
-                                                1. change name
+                                                1. exit
                                                 2. change address 
                                                 3. change city
                                                 4. change state
                                                 5. change zip code
                                                 6. change phone number
                                                 7. change email
-                                                8. exist
+                                                
                                         """))
                 if user_choice != 8:
                     change_con = input("Enter the changeable thing ")  # changeable content
                 match user_choice:
                     case 1:
-                        self.name = change_con
+                        break
                     case 2:
                         self.address = change_con
                     case 3:
@@ -93,8 +95,7 @@ class Contact:
                         self.p_num = change_con
                     case 7:
                         self.email = change_con
-                    case 8:
-                        break
+
         except Exception as ex:
             logger.exception(ex)
 
@@ -104,8 +105,6 @@ class AddressBook():
     def __init__(self, name):
         self.address_book_name = name
         self.contact_dict = {}
-        self.person_city_dict = {}
-        self.person_state_dict = {}
 
     def add_contact(self, con_obj):
         """
@@ -147,6 +146,7 @@ class AddressBook():
                 value.display_contact()
         except Exception as ex:
             print(ex)
+
     def update_contact_in_book(self, name):
         """
            Description:
@@ -174,21 +174,28 @@ class AddressBook():
            Return: None
 
         """
-        counter= 0
-        # for key, value in self.contact_dict.items():
-        #     if value.city.lower() == city.lower() or value.state.lower() == city.lower():
-        #         value.display_contact()
-        #         counter += 1
-        # return counter
 
-        contacts = dict(filter(lambda x: x[1].city.lower()==city.lower() or x[1].state.lower() == city.lower()  ,self.contact_dict.items() ))
+        contacts = dict(filter(lambda x: x[1].city.lower() == city.lower() or x[1].state.lower() == city.lower(),
+                               self.contact_dict.items()))
         # print(contacts)
         for i in contacts.values():
-            counter += 1
             i.display_contact()
-        return counter   
+        return len(contacts)
 
-    def make_a_dict_person_city_state(self,):
+    def sort_contact_using_person_name(self):
+        """
+           Description:
+               this function is used sort the contact using person name
+
+           Parameter: self
+
+           Return: None
+
+        """
+        for key, value in dict(sorted(self.contact_dict.items())).items():
+            value.display_contact()
+
+    def make_a_dict_person_city_state(self, ):
         """
            Description:
                this function is used to make a dictionary of person city , state
@@ -199,12 +206,27 @@ class AddressBook():
 
         """
 
-        # for key, value in self.contact_dict.items():
-        #     self.person_city_dict.update({value.name: value.city})
-        #     self.person_state_dict.update({value.name: value.state})
+        for key, value in self.contact_dict.items():
+            print(f" Name : {value.name}  city : {value.city}  state : {value.state}")
+
         # print(f"Person :City {self.person_city_dict}")
         # print(f"Person : state {self.person_state_dict}")
         # contacts = filter(lambda x : x[1].city)
+
+    def sort_add_book_con_using_city(self,city_name):
+        """
+           Description:
+               this function is used to sort contact using city or state
+
+           Parameter: self
+
+           Return: None
+
+        """
+        sorted_con = sorted(self.contact_dict.values(),key=lambda x: x.city == city_name, reverse=False)
+        for i in sorted_con:
+            i:Contact
+            print(f"{i.name} --> {i.city}")
 
     def delete_contact(self, name):
         """
@@ -302,7 +324,9 @@ def main():
                         5. Search Contact using state 
                         6. Search Contact using city
                         7. Maintain dictionary of Person City State
-                        8. exit
+                        8. Sort data in address book using person name 
+                        9. sort address book contact using city name 
+                        10.exit
             """))
 
             match user_choice:
@@ -377,6 +401,19 @@ def main():
                         print("This book is not present ")
                     add_book_obj.make_a_dict_person_city_state()
                 case 8:
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+                    add_book_obj.sort_contact_using_person_name()
+                case 9:
+                    a_book_name = input("Enter the address book name : ")
+                    add_book_obj = mul_a_b_obj.get_book(a_book_name)
+                    if add_book_obj is None:
+                        print("This book is not present ")
+                    city_name = input("Enter the city name ")
+                    add_book_obj.sort_add_book_con_using_city(city_name)
+                case 10:
                     break
 
     except Exception as e:
