@@ -240,10 +240,7 @@ class AddressBook():
         for key, value in self.contact_dict.items():
             print(f" Name : {value.name}  city : {value.city}  state : {value.state}")
 
-        # print(f"Person :City {self.person_city_dict}")
-        # print(f"Person : state {self.person_state_dict}")
-        # contacts = filter(lambda x : x[1].city)
-
+    
     def sort_add_book_con_using_city(self, city_name):
         """
            Description:
