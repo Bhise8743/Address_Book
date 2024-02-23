@@ -12,14 +12,7 @@
 
 """
 
-"""
-debug
-info
-warning
-exception
-error
-"""
-# stream handler
+
 import logging
 
 logging.basicConfig(filename="Address_book_log.log", level=logging.DEBUG,
@@ -175,11 +168,7 @@ class AddressBook():
 
         """
         counter= 0
-        # for key, value in self.contact_dict.items():
-        #     if value.city.lower() == city.lower() or value.state.lower() == city.lower():
-        #         value.display_contact()
-        #         counter += 1
-        # return counter
+      
 
         contacts = dict(filter(lambda x: x[1].city.lower()==city.lower() or x[1].state.lower() == city.lower()  ,self.contact_dict.items() ))
         # print(contacts)
@@ -199,12 +188,6 @@ class AddressBook():
 
         """
 
-        # for key, value in self.contact_dict.items():
-        #     self.person_city_dict.update({value.name: value.city})
-        #     self.person_state_dict.update({value.name: value.state})
-        # print(f"Person :City {self.person_city_dict}")
-        # print(f"Person : state {self.person_state_dict}")
-        # contacts = filter(lambda x : x[1].city)
 
     def delete_contact(self, name):
         """
